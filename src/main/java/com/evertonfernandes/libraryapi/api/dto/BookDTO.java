@@ -2,8 +2,7 @@ package com.evertonfernandes.libraryapi.api.dto;
 
 import lombok.*;
 
-@Getter
-@Setter
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
