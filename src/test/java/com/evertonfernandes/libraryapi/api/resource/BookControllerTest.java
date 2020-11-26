@@ -1,6 +1,7 @@
 package com.evertonfernandes.libraryapi.api.resource;
 
 import com.evertonfernandes.libraryapi.api.dto.BookDTO;
+import com.evertonfernandes.libraryapi.exception.BusinessException;
 import com.evertonfernandes.libraryapi.model.entity.Book;
 import com.evertonfernandes.libraryapi.service.BookService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -38,11 +39,15 @@ class BookControllerTest {
     @MockBean
     BookService service;
 
+    private BookDTO createNewBook() {
+        return BookDTO.builder().author("Everton").title("As aventuras").isbn("001").build();
+    }
+
     @Test
     @DisplayName("Deve criar um livro com sucesso.")
     void createBookTest() throws Exception {
 
-        BookDTO bookDTO = BookDTO.builder().author("Everton").title("As aventuras").isbn("001").build();
+        BookDTO bookDTO = createNewBook();
 
         Book savedBook = Book.builder().id(10L).author("Everton").title("As aventuras").isbn("001").build();
 
@@ -78,7 +83,31 @@ class BookControllerTest {
                 .content(json);
 
         mockMvc.perform(request)
-                .andExpect( status().isBadRequest() )
-                .andExpect( jsonPath("errors", hasSize(3)));
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("errors", hasSize(3)));
+    }
+
+    @Test
+    @DisplayName("Deve lançar erro ao tentar cadastrar um livro com isbn já utilizado por outro autor")
+    public void createBookWithDuplicatedIsbn() throws Exception {
+
+        BookDTO bookDTO = createNewBook();
+
+        String json = new ObjectMapper().writeValueAsString(bookDTO);
+
+        String errorMessage = "Isbn já cadastrado.";
+
+        BDDMockito.given(service.save(Mockito.any(Book.class))).willThrow(new BusinessException(errorMessage));
+
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+                .post(BOOK_API)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(json);
+
+        mockMvc.perform(request)
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("errors",hasSize(1)))
+                .andExpect(jsonPath("errors[0]").value(errorMessage));
     }
 }
