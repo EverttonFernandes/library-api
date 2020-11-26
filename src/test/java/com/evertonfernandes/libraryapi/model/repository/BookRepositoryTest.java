@@ -35,4 +35,13 @@ class BookRepositoryTest {
         assertThat(exists).isTrue();
     }
 
+    @Test
+    @DisplayName("Deve retornar falso quando existir um livro na base com o isbn informado.")
+    void returnFalseWhenIsbnExists() {
+        String isbn = "123";
+
+        boolean exists = bookRepository.existsByIsbn(isbn);
+
+        assertThat(exists).isFalse();
+    }
 }
