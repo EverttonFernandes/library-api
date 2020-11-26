@@ -1,7 +1,7 @@
 package com.evertonfernandes.libraryapi.service;
 
-import com.evertonfernandes.libraryapi.api.model.entity.Book;
-import com.evertonfernandes.libraryapi.api.model.repository.BookRepository;
+import com.evertonfernandes.libraryapi.model.entity.Book;
+import com.evertonfernandes.libraryapi.model.repository.BookRepository;
 import com.evertonfernandes.libraryapi.service.impl.BookServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -38,7 +38,6 @@ public class BookServiceTest {
                 .isbn("123")
                 .author("Fulano")
                 .title("As aventuras").build());
-
 
         Book savedBook = bookService.save(book);
 

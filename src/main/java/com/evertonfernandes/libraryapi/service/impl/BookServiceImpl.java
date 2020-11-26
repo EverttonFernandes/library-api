@@ -1,7 +1,7 @@
 package com.evertonfernandes.libraryapi.service.impl;
 
-import com.evertonfernandes.libraryapi.api.model.entity.Book;
-import com.evertonfernandes.libraryapi.api.model.repository.BookRepository;
+import com.evertonfernandes.libraryapi.model.entity.Book;
+import com.evertonfernandes.libraryapi.model.repository.BookRepository;
 import com.evertonfernandes.libraryapi.service.BookService;
 import org.springframework.stereotype.Service;
 

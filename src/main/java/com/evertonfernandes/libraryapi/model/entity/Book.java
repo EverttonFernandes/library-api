@@ -1,4 +1,4 @@
-package com.evertonfernandes.libraryapi.api.model.entity;
+package com.evertonfernandes.libraryapi.model.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
