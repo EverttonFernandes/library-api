@@ -107,7 +107,8 @@ class BookControllerTest {
 
         mockMvc.perform(request)
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("errors",hasSize(1)))
+                .andExpect(jsonPath("errors", hasSize(1)))
                 .andExpect(jsonPath("errors[0]").value(errorMessage));
     }
+
 }
