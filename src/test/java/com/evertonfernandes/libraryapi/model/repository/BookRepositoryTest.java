@@ -1,5 +1,6 @@
 package com.evertonfernandes.libraryapi.model.repository;
 
+import com.evertonfernandes.libraryapi.model.entity.Book;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,11 +25,14 @@ class BookRepositoryTest {
 
     @Test
     @DisplayName("Deve retornar verdadeiro quando existir um livro na base com o isbn informado.")
-    void returnTrueWhenIsbnExists(){
+    void returnTrueWhenIsbnExists() {
         String isbn = "123";
+        Book book = Book.builder().title("As aventuras").author("Fulano").isbn(isbn).build();
+        testEntityManager.persist(book);
 
         boolean exists = bookRepository.existsByIsbn(isbn);
 
         assertThat(exists).isTrue();
     }
+
 }
