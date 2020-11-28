@@ -20,7 +20,11 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.Optional;
+
+import static org.hamcrest.Matchers.arrayContainingInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -89,7 +93,7 @@ class BookControllerTest {
 
     @Test
     @DisplayName("Deve lançar erro ao tentar cadastrar um livro com isbn já utilizado por outro autor")
-    public void createBookWithDuplicatedIsbn() throws Exception {
+    void createBookWithDuplicatedIsbn() throws Exception {
 
         BookDTO bookDTO = createNewBook();
 
@@ -111,4 +115,27 @@ class BookControllerTest {
                 .andExpect(jsonPath("errors[0]").value(errorMessage));
     }
 
+    @Test
+    @DisplayName("Deve obter informações de um livro")
+    void getBookDetailsTest() throws Exception {
+        // cenario
+        Long id = 1L;
+
+        Book book = Book.builder()
+                .id(id)
+                .title(createNewBook().getTitle())
+                .author(createNewBook().getAuthor())
+                .isbn(createNewBook().getIsbn()).build();
+
+        BDDMockito.given(service.getById(id)).willReturn(Optional.of(book));
+
+        //Execucao
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get(BOOK_API.concat("/").concat(id.toString())).accept(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(request).andExpect(status().isOk())
+                .andExpect(jsonPath("id").value(id))
+                .andExpect(jsonPath("title").value(createNewBook().getTitle()))
+                .andExpect(jsonPath("author").value(createNewBook().getAuthor()))
+                .andExpect(jsonPath("isbn").value(createNewBook().getIsbn()));
+    }
 }
