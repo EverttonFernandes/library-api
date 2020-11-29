@@ -195,4 +195,19 @@ class BookControllerTest {
                 .andExpect(jsonPath("author").value(createNewBook().getAuthor()))
                 .andExpect(jsonPath("isbn").value("321"));
     }
+
+    @Test
+    @DisplayName("Deve retornar 404 ao tentar atualizar um livro que não existe")
+    void updateIsNotPerformedWhenTheBookAlreadyExistsTest() throws Exception {
+        String json = new ObjectMapper().writeValueAsString(createNewBook());
+
+        BDDMockito.given(service.getById(Mockito.anyLong())).willReturn(Optional.empty());
+
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.put(BOOK_API.concat("/").concat("1"))
+                .content(json)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(request).andExpect(status().isNotFound());
+    }
 }
