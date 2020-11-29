@@ -91,7 +91,7 @@ class BookControllerTest {
 
     @Test
     @DisplayName("Deve lançar erro ao tentar cadastrar um livro com isbn já utilizado por outro autor")
-    void createBookWithDuplicatedIsbn() throws Exception {
+    void createBookWithDuplicatedIsbnTest() throws Exception {
 
         BookDTO bookDTO = createNewBook();
 
@@ -140,7 +140,7 @@ class BookControllerTest {
 
     @Test
     @DisplayName("Deve retornar resource not found quando o livro procurado não existir")
-    void bookNotFound() throws Exception {
+    void bookNotFoundTest() throws Exception {
         BDDMockito.given(service.getById(Mockito.anyLong())).willReturn(Optional.empty());
 
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders.get(BOOK_API.concat("/").concat("1")).accept(MediaType.APPLICATION_JSON);
@@ -148,4 +148,5 @@ class BookControllerTest {
         mockMvc.perform(request).andExpect(status().isNotFound());
 
     }
+
 }
