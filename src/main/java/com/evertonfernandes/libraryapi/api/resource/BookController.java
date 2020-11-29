@@ -14,6 +14,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 
+import static java.nio.file.attribute.AclEntryPermission.DELETE;
+
 @RestController
 @RequestMapping("/api/books")
 public class BookController {
@@ -39,6 +41,13 @@ public class BookController {
         return service.getById(id).map(book -> modelMapper.map(book, BookDTO.class)).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
 
+    @DeleteMapping(value = "/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public @ResponseBody void delete(@PathVariable Long id) {
+        Book book = service.getById(id).get();
+        service.delete(book);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiErros handleValidationException(MethodArgumentNotValidException exception) {
@@ -51,4 +60,6 @@ public class BookController {
     public ApiErros handleBusinessException(BusinessException exception) {
         return new ApiErros(exception);
     }
+
+
 }
