@@ -61,4 +61,14 @@ class BookRepositoryTest {
 
         assertThat(foundBook.isPresent()).isTrue();
     }
+
+    @Test
+    @DisplayName("Deve salvar um livro")
+    void savedBookTest() {
+        Book book = createNewBook("123");
+
+        Book savedBook = bookRepository.save(book);
+
+        assertThat(savedBook.getId()).isNotNull();
+    }
 }
