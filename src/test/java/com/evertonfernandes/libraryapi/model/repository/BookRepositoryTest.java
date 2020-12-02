@@ -71,4 +71,18 @@ class BookRepositoryTest {
 
         assertThat(savedBook.getId()).isNotNull();
     }
+
+    @Test
+    @DisplayName("Deve deletar um livro")
+    void deleteBookTest() {
+        Book book = createNewBook("123");
+        testEntityManager.persist(book);
+        Book foundBook = testEntityManager.find(Book.class, book.getId());
+
+        bookRepository.delete(foundBook);
+
+        Book deletedBook = testEntityManager.find(Book.class, book.getId());
+        assertThat(deletedBook).isNull();
+    }
+
 }
