@@ -97,4 +97,15 @@ class BookServiceTest {
         assertThat(book.isPresent()).isFalse();
 
     }
+
+    @Test
+    @DisplayName("Deve remover um livro")
+    void deleteBookTest() {
+        Book book = Book.builder().id(1L).build();
+
+        org.junit.jupiter.api.Assertions.assertDoesNotThrow(() -> bookService.delete(book));
+
+        Mockito.verify(repository, Mockito.times(1)).delete(book);
+    }
+
 }
