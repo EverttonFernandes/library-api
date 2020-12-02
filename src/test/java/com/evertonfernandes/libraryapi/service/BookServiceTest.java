@@ -110,11 +110,22 @@ class BookServiceTest {
 
     @Test
     @DisplayName("Deve ocorrer erro ao tentar deleter um livro inexistente")
-    void deleteInvalidBookTest () {
+    void deleteInvalidBookTest() {
         Book book = new Book();
 
         org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class, () -> bookService.delete(book));
 
         Mockito.verify(repository, Mockito.never()).delete(book);
     }
+
+    @Test
+    @DisplayName("Deve ocorrer erro ao tentar atualizar um livro inexistente")
+    void updateInvalidBookTest() {
+        Book book = new Book();
+
+        org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class, () -> bookService.update(book));
+
+        Mockito.verify(repository, Mockito.never()).save(book);
+    }
+
 }
