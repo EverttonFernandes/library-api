@@ -4,8 +4,10 @@ import com.evertonfernandes.libraryapi.exception.BusinessException;
 import com.evertonfernandes.libraryapi.model.entity.Book;
 import com.evertonfernandes.libraryapi.model.repository.BookRepository;
 import com.evertonfernandes.libraryapi.service.BookService;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import java.awt.print.Pageable;
 import java.util.Optional;
 
 @Service
@@ -43,5 +45,10 @@ public class BookServiceImpl implements BookService {
             throw new IllegalArgumentException("Book id can't be null");
         }
         return this.repository.save(book);
+    }
+
+    @Override
+    public Page<Book> find(Book filter, Pageable pageRequest) {
+        return null;
     }
 }
