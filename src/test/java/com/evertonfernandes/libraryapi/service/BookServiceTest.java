@@ -18,7 +18,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.awt.print.Pageable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -47,7 +46,7 @@ class BookServiceTest {
     @DisplayName("Deve salvar um livro")
     void saveBookTest() {
         Book book = createValidBook();
-        Mockito.when(repository.existsByIsbn(Mockito.anyString())).thenReturn(true);
+        Mockito.when(repository.existsByIsbn(Mockito.anyString())).thenReturn(false);
 
         Mockito.when(repository.save(book)).thenReturn(Book.builder()
                 .id(1L)
@@ -71,7 +70,7 @@ class BookServiceTest {
 
         Throwable exception = Assertions.catchThrowable(() -> bookService.save(book));
 
-        assertThat(exception).isInstanceOf(BusinessException.class).hasMessage("Isbn já cadastrado.");
+        assertThat(exception).isInstanceOf(BusinessException.class).hasMessage("Isbn já cadastrado");
         Mockito.verify(repository, Mockito.never()).save(book);
     }
 
@@ -90,7 +89,6 @@ class BookServiceTest {
         assertThat(foundBook.get().getAuthor()).isEqualTo(book.getAuthor());
         assertThat(foundBook.get().getIsbn()).isEqualTo(book.getIsbn());
         assertThat(foundBook.get().getTitle()).isEqualTo(book.getTitle());
-
     }
 
     @Test
@@ -102,7 +100,6 @@ class BookServiceTest {
         Optional<Book> book = bookService.getById(id);
 
         assertThat(book.isPresent()).isFalse();
-
     }
 
     @Test
@@ -167,14 +164,12 @@ class BookServiceTest {
                 .thenReturn(page);
 
         //execucao
-        Page<Book> result = bookService.find(book, (Pageable) pageRequest);
+        Page<Book> result = bookService.find(book, pageRequest);
 
         //verificacoes
         assertThat(result.getTotalElements()).isEqualTo(1);
         assertThat(result.getContent()).isEqualTo(lista);
         assertThat(result.getPageable().getPageNumber()).isEqualTo(0);
         assertThat(result.getPageable().getPageSize()).isEqualTo(10);
-
     }
-
 }

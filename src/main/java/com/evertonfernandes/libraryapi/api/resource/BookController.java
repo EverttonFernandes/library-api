@@ -8,6 +8,7 @@ import com.evertonfernandes.libraryapi.service.BookService;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -16,11 +17,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 
-import java.awt.print.Pageable;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static java.nio.file.attribute.AclEntryPermission.DELETE;
 
 @RestController
 @RequestMapping("/api/books")
@@ -34,17 +32,17 @@ public class BookController {
         this.modelMapper = modelMapper;
     }
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public BookDTO create(@RequestBody @Valid BookDTO dto) {
-        Book entity = modelMapper.map(dto, Book.class);
-        entity = service.save(entity);
-        return modelMapper.map(entity, BookDTO.class);
-    }
-
     @GetMapping("{id}")
     public BookDTO getBook(@PathVariable Long id) {
         return service.getById(id).map(book -> modelMapper.map(book, BookDTO.class)).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public BookDTO create(@RequestBody @Valid BookDTO bookDTO) {
+        Book bookEntity = modelMapper.map(bookDTO, Book.class);
+        bookEntity = service.save(bookEntity);
+        return modelMapper.map(bookEntity, BookDTO.class);
     }
 
     @DeleteMapping(value = "/{id}")
@@ -68,7 +66,7 @@ public class BookController {
     }
 
     @GetMapping
-    public Page<BookDTO> find( BookDTO dto, Pageable pageRequest ){
+    public Page<BookDTO> find(BookDTO dto, Pageable pageRequest) {
         Book filter = modelMapper.map(dto, Book.class);
         Page<Book> result = service.find(filter, pageRequest);
         List<BookDTO> list = result.getContent()
@@ -76,7 +74,7 @@ public class BookController {
                 .map(entity -> modelMapper.map(entity, BookDTO.class))
                 .collect(Collectors.toList());
 
-        return new PageImpl<BookDTO>( list, (org.springframework.data.domain.Pageable) pageRequest, result.getTotalElements() );
+        return new PageImpl<BookDTO>(list, pageRequest, result.getTotalElements());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
