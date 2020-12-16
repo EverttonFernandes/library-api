@@ -8,6 +8,7 @@ import com.evertonfernandes.libraryapi.service.BookService;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -16,11 +17,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 
-import java.awt.print.Pageable;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static java.nio.file.attribute.AclEntryPermission.DELETE;
 
 @RestController
 @RequestMapping("/api/books")
@@ -76,7 +74,7 @@ public class BookController {
                 .map(entity -> modelMapper.map(entity, BookDTO.class))
                 .collect(Collectors.toList());
 
-        return new PageImpl<BookDTO>( list, (org.springframework.data.domain.Pageable) pageRequest, result.getTotalElements() );
+        return new PageImpl<BookDTO>( list, pageRequest, result.getTotalElements() );
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

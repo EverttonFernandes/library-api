@@ -167,7 +167,7 @@ class BookServiceTest {
                 .thenReturn(page);
 
         //execucao
-        Page<Book> result = bookService.find(book, (Pageable) pageRequest);
+        Page<Book> result = bookService.find(book, pageRequest);
 
         //verificacoes
         assertThat(result.getTotalElements()).isEqualTo(1);
