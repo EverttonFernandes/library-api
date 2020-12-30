@@ -47,7 +47,7 @@ class BookServiceTest {
     @DisplayName("Deve salvar um livro")
     void saveBookTest() {
         Book book = createValidBook();
-        Mockito.when(repository.existsByIsbn(Mockito.anyString())).thenReturn(true);
+        Mockito.when(repository.existsByIsbn(Mockito.anyString())).thenReturn(false);
 
         Mockito.when(repository.save(book)).thenReturn(Book.builder()
                 .id(1L)
@@ -71,7 +71,7 @@ class BookServiceTest {
 
         Throwable exception = Assertions.catchThrowable(() -> bookService.save(book));
 
-        assertThat(exception).isInstanceOf(BusinessException.class).hasMessage("Isbn já cadastrado.");
+        assertThat(exception).isInstanceOf(BusinessException.class).hasMessage("Isbn já cadastrado");
         Mockito.verify(repository, Mockito.never()).save(book);
     }
 
