@@ -78,23 +78,6 @@ class BookControllerTest {
     }
 
     @Test
-    @DisplayName("Deve lançar erro de validação quando não houver dados suficiente para criação de livro.")
-    void createInvalidBookTest() throws Exception {
-
-        String json = new ObjectMapper().writeValueAsString(new BookDTO());
-
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
-                .post(BOOK_API)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(json);
-
-        mockMvc.perform(request)
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("errors", hasSize(3)));
-    }
-
-    @Test
     @DisplayName("Deve lançar erro ao tentar cadastrar um livro com isbn já utilizado por outro autor")
     void createBookWithDuplicatedIsbnTest() throws Exception {
 
